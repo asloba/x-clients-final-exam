@@ -2,30 +2,27 @@ package ru.inno.api;
 
 import com.github.javafaker.Faker;
 import io.restassured.common.mapper.TypeRef;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import ru.inno.model.Employee;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static io.restassured.RestAssured.given;
 
+@Component
 public class EmployeeServiceImpl implements EmployeeService {
-    private static final String PATH = "/employee";
-    private final static String prefix = "AL-";
+
+    @Value("${base_url}")
+    protected String URI;
+
+    @Value("${employee.endpoint}")
+    protected String PATH;
+
+    @Value("${names.prefix}")
+    protected String prefix;
     Faker faker = new Faker();
-    private Map<String, String> headers = new HashMap<>();
 
-    private String uri = "https://x-clients-be.onrender.com";
-
-    public EmployeeServiceImpl(String uri) {
-        this.uri = uri;
-    }
-
-    @Override
-    public void setURI(String uri) {
-        this.uri = uri;
-    }
 
     @Override
     public Employee getRandomEmployee(int companyId) {
@@ -42,8 +39,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public List<Employee> getAll(int companyId) {
         return given()
-                .baseUri(uri + PATH)
-                .header("accept", "application/json")
+                .baseUri(URI + PATH)
                 .header("accept", "application/json")
                 .param("company", companyId)
                 .when()
@@ -60,7 +56,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public Employee getById(int id) {
         return given()
-                .baseUri(uri + PATH + "/" + id)
+                .baseUri(URI + PATH + "/" + id)
                 .header("accept", "application/json")
                 .when()
                 .get()
@@ -73,7 +69,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public int create(Employee employee, String token) {
         return given()
-                .baseUri(uri + PATH)
+                .baseUri(URI + PATH)
                 .log().ifValidationFails()
                 .header("accept", "application/json")
                 .contentType("application/json; charset=utf-8")
@@ -96,7 +92,7 @@ public class EmployeeServiceImpl implements EmployeeService {
                 .header("x-client-token", token)
                 .body(employee)
                 .when()
-                .patch(uri + PATH + "/{id}", employee.getId())
+                .patch(URI + PATH + "/{id}", employee.getId())
                 .then().log().ifValidationFails()
                 .extract()
                 .body().as(Employee.class);

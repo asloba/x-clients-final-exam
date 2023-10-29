@@ -1,12 +1,10 @@
 package ru.inno.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -28,6 +26,9 @@ public class CompanyEntity {
     private String description;
     @Column(name = "deleted_at", nullable = true)
     private Timestamp deletedAt;
+    @OneToMany(targetEntity = EmployeeEntity.class, mappedBy = "company")
+    private List<EmployeeEntity> employees;
+
 
     public CompanyEntity() {
     }
@@ -98,5 +99,13 @@ public class CompanyEntity {
 
     public void setDeletedAt(Timestamp deletedAt) {
         this.deletedAt = deletedAt;
+    }
+
+    public List<EmployeeEntity> getEmployees() {
+        return employees;
+    }
+
+    public void setEmployees(List<EmployeeEntity> employees) {
+        this.employees = employees;
     }
 }
