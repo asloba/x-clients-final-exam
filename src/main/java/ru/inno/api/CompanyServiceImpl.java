@@ -1,6 +1,5 @@
 package ru.inno.api;
 
-import com.github.javafaker.Faker;
 import io.restassured.common.mapper.TypeRef;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -22,22 +21,6 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Value("${company.delete.endpoint}")
     protected String deletePath;
-
-    @Value("${names.prefix}")
-    protected String prefix;
-
-    Faker faker = new Faker();
-
-    @Override
-    public Company getRandomCompany() {
-
-        int companyId = faker.random().nextInt(1000, 10000);
-        String companyName = prefix + faker.twinPeaks().character();
-        String companyDescription = prefix + faker.twinPeaks().quote();
-
-        return new Company(companyId, companyName, companyDescription);
-    }
-
 
     @Override
     public List<Company> getAll() {

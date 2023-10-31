@@ -36,4 +36,5 @@ public class AuthorizeServiceImpl implements AuthorizeService {
                 .extract().path("userToken");
         return token;
     }
+
 }

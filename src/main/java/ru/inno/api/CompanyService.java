@@ -7,7 +7,6 @@ import java.util.List;
 
 public interface CompanyService {
 
-    Company getRandomCompany();
 
     @Step("Получить список всех компаний по API")
     List<Company> getAll();

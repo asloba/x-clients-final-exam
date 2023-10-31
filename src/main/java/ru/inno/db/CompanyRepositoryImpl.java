@@ -13,14 +13,18 @@ public class CompanyRepositoryImpl implements CompanyRepository {
     CompanyRepositorySpring companyRepositorySpring;
 
 
+   /* Для получения списка всех компаний использую метод "findAllByDeletedAtNull",
+   т.к. апи запрос "get all" возвращает только не удаленные компании */
     @Override
     public List<CompanyEntity> getAll() {
         return companyRepositorySpring.findAllByDeletedAtNull();
     }
 
+    /* Для получения списка только активных компаний использую метод "findAllByIsActiveAndDeletedAtIsNull",
+    т.к. апи запрос на получение только активных компаний возвращает именнро активные не удаленные компании */
     @Override
     public List<CompanyEntity> getAll(boolean isActive) {
-        return companyRepositorySpring.findAllByIsActive(isActive);
+        return companyRepositorySpring.findAllByIsActiveAndDeletedAtIsNull(isActive);
     }
 
     @Override
@@ -45,6 +49,5 @@ public class CompanyRepositoryImpl implements CompanyRepository {
 
     @Override
     public void deleteById(int id) {
-
     }
 }

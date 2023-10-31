@@ -6,8 +6,6 @@ import java.util.List;
 
 public interface EmployeeService {
 
-    Employee getRandomEmployee(int companyId);
-
     List<Employee> getAll(int companyId);
 
     Employee getById(int id);

@@ -1,6 +1,5 @@
 package ru.inno.api;
 
-import com.github.javafaker.Faker;
 import io.restassured.common.mapper.TypeRef;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -19,22 +18,6 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Value("${employee.endpoint}")
     protected String PATH;
 
-    @Value("${names.prefix}")
-    protected String prefix;
-    Faker faker = new Faker();
-
-
-    @Override
-    public Employee getRandomEmployee(int companyId) {
-        int id = 0;
-        String firstName = prefix + faker.name().firstName();
-        String lastName = faker.name().lastName();
-        String email = faker.internet().emailAddress();
-        String url = faker.internet().url();
-        String phone = String.valueOf(faker.number().digits(10));
-        String birthDate = faker.date().birthday().toString();
-        return new Employee(id, firstName, lastName, companyId, email, url, phone, birthDate, true);
-    }
 
     @Override
     public List<Employee> getAll(int companyId) {

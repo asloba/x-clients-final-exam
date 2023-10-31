@@ -12,9 +12,8 @@ public interface CompanyRepositorySpring extends CrudRepository<CompanyEntity, I
     List<CompanyEntity> findAll();
 
     List<CompanyEntity> findAllByIsActive(boolean isActive);
-
-
     List<CompanyEntity> findAllByIsActiveAndDeletedAtIsNotNull(boolean isActive);
+    List<CompanyEntity> findAllByIsActiveAndDeletedAtIsNull(boolean isActive);
     List<CompanyEntity> findAllByDeletedAtNull();
     void deleteByNameStartingWith(String name);
     CompanyEntity findFirstByOrderByIdDesc();

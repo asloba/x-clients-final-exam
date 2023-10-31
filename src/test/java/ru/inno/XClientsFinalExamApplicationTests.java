@@ -1,35 +1,41 @@
 package ru.inno;
 
-import org.junit.jupiter.api.Assertions;
+import com.github.javafaker.Faker;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import ru.inno.api.AuthorizeService;
 import ru.inno.api.CompanyService;
+import ru.inno.api.EmployeeService;
 import ru.inno.db.CompanyRepository;
+import ru.inno.db.EmployeeRepository;
 import ru.inno.model.Company;
 import ru.inno.model.CompanyEntity;
+import ru.inno.model.Employee;
 
 import java.sql.SQLException;
 import java.util.List;
 
 import static io.qameta.allure.Allure.step;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static ru.inno.testData.EmployeeTestsData.getRandomEmployee;
 
 @SpringBootTest
 class XClientsFinalExamApplicationTests {
 
     @Autowired
     private CompanyRepository companyRepoService;
-    //    @Autowired
-//    private EmployeeRepository employeeRepoService;
+    @Autowired
+    private EmployeeRepository employeeRepoService;
     @Autowired
     private CompanyService companyApiService;
-//    @Autowired
-//    private EmployeeService employeeAPIService;
-
-    XClientsFinalExamApplicationTests() {
-    }
-
+    @Autowired
+    private EmployeeService employeeAPIService;
+    @Autowired
+    private AuthorizeService authAPIService;
+    Faker faker = new Faker();
 
     @Test
     void contextLoads() {
@@ -40,34 +46,37 @@ class XClientsFinalExamApplicationTests {
     public void shouldFilterCompaniesByIsActive() {
         step("Получить список всех компаний по API");
         List<Company> companiesByApi = companyApiService.getAll();
-        step("Получить список всех компаний из DB");
+        step("Получить список всех компаний из БД");
         List<CompanyEntity> companiesBySqlQuery = companyRepoService.getAll();
-
         step("Сверить длинны списков", () -> {
-            Assertions.assertEquals(companiesByApi.size(), companiesBySqlQuery.size());
+            assertEquals(companiesByApi.size(), companiesBySqlQuery.size());
         });
         step("Получить список всех активных компаний по API");
         List<Company> activeCompaniesByApi = companyApiService.getAll(true);
-        step("Получить список всех активных компаний из DB");
+        step("Получить список всех активных компаний из БД");
         List<CompanyEntity> activeCompaniesBySqlQuery = companyRepoService.getAll(true);
-        step("Проверить длинны списков");
-        Assertions.assertEquals(activeCompaniesByApi.size(), activeCompaniesBySqlQuery.size());
+        step("Сравнить размеры списков");
+        assertEquals(activeCompaniesByApi.size(), activeCompaniesBySqlQuery.size());
 
     }
 
     @Test
     @DisplayName("Проверить создание сотрудника в несуществующей компании")
     public void shouldNotCreateEmployeeToAbsentCompany() {
-
-
-//      Генерируем несуществующий companyId
-
-//      Запрашиваем размер списка employee до попытки создания employee с несуществующим companyId
-
-//      Генерируем тестовые данные для employee
-
-//      Проверяем, что при попытке создания employee через апи появляется ошибка
+        //Генерируем несуществующий companyId
+        Integer nonExistentCompanyId = faker.number().numberBetween(2000, 5000);
+        //Генерируем тестовые данные Employee
+        Employee employee = getRandomEmployee(nonExistentCompanyId);
+        //Запрашиваем размер списка employee до попытки создания employee с несуществующим companyId
+        int startListSize = employeeRepoService.getAll().size();
+        //проверяем, что при попытке создания через апи появляется ошибка
+        assertThrows(AssertionError.class, () -> employeeAPIService.create(employee, authAPIService.getToken()));
+        //Перезапрашиваем размер списка employee
+        int endListSize = employeeRepoService.getAll().size();
+        //Проверяем, что размеры первого и второго списков равны
+        assertEquals(startListSize, endListSize);
     }
+
 
     @Test
     @DisplayName("Проверить, что неактивный сотрудник не отображается в списке")
@@ -77,7 +86,6 @@ class XClientsFinalExamApplicationTests {
         //Создаем Employee в бд
 
         //У Employee устанавливаем isActive = false и сохраняем
-
         //Проверяем, что неактивный сотрудник не отображается при запросе по ID через API
     }
 
