@@ -15,10 +15,10 @@ public class AuthorizeServiceImpl implements AuthorizeService {
     @Value("${auth.endpoint}")
     protected String path;
 
-    @Value("${username}")
+    @Value("${app.username}")
     protected String username;
 
-    @Value("${password}")
+    @Value("${app.password}")
     protected String password;
 
     @Override
@@ -36,5 +36,4 @@ public class AuthorizeServiceImpl implements AuthorizeService {
                 .extract().path("userToken");
         return token;
     }
-
 }

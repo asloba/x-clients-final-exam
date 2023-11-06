@@ -40,7 +40,6 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Override
     public List<Company> getAll(boolean isActive) {
-        step("Получить список всех активных компаний по API");
         return given()
                 .baseUri(uri + path)
                 .header("accept", "application/json")
@@ -57,36 +56,11 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     @Override
-    public Company getById(int id) {
-        return null;
-    }
-
-
-    @Override
-    public int create(String name, String description, String token) {
-        step("Создать по API компанию с именем и описанием");
-        return given()
-                .baseUri(uri + path)
-                .header("accept", "application/json")
-                .header("x-client-token", token)
-                .log().ifValidationFails()
-                .contentType("application/json")
-                .body("{\"name\": \"" + name + "\",\"description\": \"" + description + "\"}")
-                .when()
-                .post()
-                .then()
-                .log().ifValidationFails()
-                .statusCode(201)
-                .contentType("application/json; charset=utf-8")
-                .extract().path("id");
-    }
-
-    @Override
     public void deleteById(int id, String token) {
-        step("Удалить компанию по id", ()->{
+        step("Удалить компанию по id", () -> {
             given()
                     .log().ifValidationFails()
-                    .baseUri(uri + path + id)
+                    .baseUri(uri + deletePath + id)
                     .header("accept", "application/json")
                     .header("x-client-token", token)
                     .log().ifValidationFails()

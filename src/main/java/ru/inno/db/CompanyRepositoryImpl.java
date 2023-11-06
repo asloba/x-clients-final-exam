@@ -3,6 +3,7 @@ package ru.inno.db;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.inno.model.CompanyEntity;
+import ru.inno.testData.CompanyTestData;
 
 import java.util.List;
 
@@ -11,10 +12,13 @@ public class CompanyRepositoryImpl implements CompanyRepository {
 
     @Autowired
     CompanyRepositorySpring companyRepositorySpring;
+    @Autowired
+    CompanyEntity companyEntity;
+    @Autowired
+    CompanyTestData companyTestData;
 
-
-   /* Для получения списка всех компаний использую метод "findAllByDeletedAtNull",
-   т.к. апи запрос "get all" возвращает только не удаленные компании */
+    /* Для получения списка всех компаний использую метод "findAllByDeletedAtNull",
+    т.к. апи запрос "get all" возвращает только не удаленные компании */
     @Override
     public List<CompanyEntity> getAll() {
         return companyRepositorySpring.findAllByDeletedAtNull();
@@ -28,26 +32,17 @@ public class CompanyRepositoryImpl implements CompanyRepository {
     }
 
     @Override
-    public CompanyEntity getLast() {
-        return null;
-    }
-
-    @Override
     public CompanyEntity getById(int id) {
-        return null;
+        return companyRepositorySpring.findById(id);
     }
 
     @Override
-    public int create(String name) {
-        return 0;
+    public int create() {
+        return companyRepositorySpring.save(companyTestData.getCompanyDBData()).getId();
     }
 
     @Override
-    public int create(String name, String description) {
-        return 0;
-    }
-
-    @Override
-    public void deleteById(int id) {
+    public void clean(String prefix) {
+        companyRepositorySpring.deleteByNameStartingWith(prefix);
     }
 }

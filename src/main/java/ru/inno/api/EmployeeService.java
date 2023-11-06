@@ -11,6 +11,4 @@ public interface EmployeeService {
     Employee getById(int id);
 
     int create(Employee employee, String token);
-
-    Employee update(Employee employee, String token);
 }

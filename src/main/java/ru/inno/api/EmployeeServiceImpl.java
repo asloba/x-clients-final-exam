@@ -1,6 +1,8 @@
 package ru.inno.api;
 
+import io.restassured.RestAssured;
 import io.restassured.common.mapper.TypeRef;
+import io.restassured.parsing.Parser;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import ru.inno.model.Employee;
@@ -18,9 +20,9 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Value("${employee.endpoint}")
     protected String PATH;
 
-
     @Override
     public List<Employee> getAll(int companyId) {
+        RestAssured.defaultParser = Parser.JSON;
         return given()
                 .baseUri(URI + PATH)
                 .header("accept", "application/json")
@@ -38,15 +40,19 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public Employee getById(int id) {
+        RestAssured.defaultParser = Parser.JSON;
         return given()
                 .baseUri(URI + PATH + "/" + id)
                 .header("accept", "application/json")
+                .contentType("application/json; charset=utf-8")
                 .when()
                 .get()
                 .then()
                 .log().ifValidationFails()
                 .statusCode(200)
-                .extract().body().as(Employee.class);
+                .contentType("application/json; charset=utf-8")
+                .extract().body().as(new TypeRef<Employee>() {
+                });
     }
 
     @Override
@@ -65,19 +71,5 @@ public class EmployeeServiceImpl implements EmployeeService {
                 .statusCode(201)
                 .contentType("application/json; charset=utf-8")
                 .extract().path("id");
-    }
-
-    @Override
-    public Employee update(Employee employee, String token) {
-        return given()
-                .log().ifValidationFails()
-                .contentType("application/json; charset=utf-8")
-                .header("x-client-token", token)
-                .body(employee)
-                .when()
-                .patch(URI + PATH + "/{id}", employee.getId())
-                .then().log().ifValidationFails()
-                .extract()
-                .body().as(Employee.class);
     }
 }

@@ -9,10 +9,9 @@ import java.util.List;
 @Repository
 public interface EmployeeRepositorySpring extends CrudRepository<EmployeeEntity, Integer> {
 
-    void deleteByFirstNameStartingWith(String name);
     List<EmployeeEntity> findAll();
 
     List<EmployeeEntity> findAllByCompanyId(int id);
 
-    void deleteAllByCompanyId(int id);
+    void deleteByFirstNameStartingWith(String name);
 }

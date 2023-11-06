@@ -2,11 +2,13 @@ package ru.inno.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
+import org.springframework.stereotype.Component;
 
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.Objects;
 
+@Component
 @Entity
 @Table(name = "company", schema = "public", catalog = "x_clients_db_r06g")
 public class CompanyEntity {
@@ -31,6 +33,15 @@ public class CompanyEntity {
 
 
     public CompanyEntity() {
+    }
+
+    public CompanyEntity(Integer id, boolean isActive, Timestamp createDateTime, Timestamp changedTimestamp, String name, String description) {
+        this.id = id;
+        this.isActive = isActive;
+        this.createDateTime = createDateTime;
+        this.changedTimestamp = changedTimestamp;
+        this.name = name;
+        this.description = description;
     }
 
     @Override

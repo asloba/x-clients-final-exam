@@ -2,11 +2,13 @@ package ru.inno.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
+import org.springframework.stereotype.Component;
 
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.Objects;
 
+@Component
 @Entity
 @Table(name = "employee", schema = "public", catalog = "x_clients_db_r06g")
 public class EmployeeEntity {
@@ -40,6 +42,15 @@ public class EmployeeEntity {
     private CompanyEntity company;
 
     public EmployeeEntity() {
+    }
+
+    public EmployeeEntity(boolean isActive, Timestamp createTimestamp, Timestamp changeTimestamp, String firstName, String lastName, CompanyEntity company) {
+        this.isActive = isActive;
+        this.createTimestamp = createTimestamp;
+        this.changeTimestamp = changeTimestamp;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.company = company;
     }
 
     public int getId() {

@@ -1,9 +1,11 @@
 package ru.inno.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.springframework.stereotype.Component;
 
 import java.util.Objects;
 
+@Component
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Employee {
 
@@ -121,9 +123,9 @@ public class Employee {
         return isActive;
     }
 
-//    public void setActive(boolean active) {
-//        isActive = active;
-//    }
+    public void setActive(boolean active) {
+        isActive = active;
+    }
 
     @Override
     public boolean equals(Object o) {
